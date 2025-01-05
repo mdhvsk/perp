@@ -28,7 +28,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({id}) => {
     }, [])
 
     const handleNewChat = () => {
-        router.push('/home');
+        router.push('/');
     };
 
     const handleGoToChat = (session_id: string) => {
