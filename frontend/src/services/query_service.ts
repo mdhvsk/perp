@@ -3,7 +3,6 @@ import {
     MedicalSearchParams,
     NutritionSearchParams,
     QueryGeneralRequest,
-    SearchResponse,
 } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 
@@ -49,7 +48,7 @@ export class QueryService {
     // Nutrition search endpoint
     public async searchNutrition(
         params: NutritionSearchParams,
-    ): Promise<Record<string, any>> {
+    ): Promise<Record<string, string>> {
         try {
             const { query, dietary_restrictions, allergies } = params;
             const queryParams = new URLSearchParams();
@@ -66,7 +65,7 @@ export class QueryService {
                 );
             }
 
-            const response = await axios.post<Record<string, any>>(
+            const response = await axios.post<Record<string, string>>(
                 `${API_BASE_URL}/nutrition?${queryParams.toString()}`,
                 { query },
             );
@@ -80,10 +79,10 @@ export class QueryService {
     // Medical information search endpoint
     public async searchMedical(
         params: MedicalSearchParams,
-    ): Promise<Record<string, any>> {
+    ): Promise<Record<string, string>> {
         try {
             const { query, include_research = false, credentials } = params;
-            const response = await axios.post<Record<string, any>>(
+            const response = await axios.post<Record<string, string>>(
                 `${API_BASE_URL}/medical`,
                 {
                     query,
@@ -101,9 +100,9 @@ export class QueryService {
     // Ask health question endpoint
     public async askHealthQuestion(
         query: string,
-    ): Promise<Record<string, any>> {
+    ): Promise<Record<string, string>> {
         try {
-            const response = await axios.post<Record<string, any>>(
+            const response = await axios.post<Record<string, string>>(
                 `${API_BASE_URL}/ask`,
                 { query },
             );

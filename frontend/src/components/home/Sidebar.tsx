@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CirclePlus, Search, FolderIcon, Star, Archive, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen, MessageSquare, PanelRightOpen, UserIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { CirclePlus, Search, FolderIcon, Star, Archive, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen, MessageSquare, UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,16 +15,12 @@ interface SidebarProps {
 const SidebarComponent: React.FC<SidebarProps> = ({id}) => {
     const [isOpen, setIsOpen] = useState(true);
     const [sessions, setSessions] = useState<Session[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
     const router = useRouter()
     useEffect(() => {
-        setLoading(true)
 
         const fetchSessions = async () => {
-            const user_id = Number(localStorage.getItem('id'))
             const data = await dbService.getAllSessions()
             setSessions(data.reverse())
-            setLoading(false)
             console.log(data)
         };
         fetchSessions();

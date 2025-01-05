@@ -1,10 +1,8 @@
-import React, { FormEvent, useEffect, useRef, useState } from 'react';
-import { Camera, Mic, Search, SendHorizontal } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import {  Search, SendHorizontal } from 'lucide-react';
 import { CircleSpinner } from './CircleSpinner';
-import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from './ui/input';
-import { dbService } from '@/services/db_service';
 
 interface Props {
     onSubmit: (prompt: string) => void;

@@ -1,16 +1,14 @@
 "use client"
 import { dbService } from '@/services/db_service'
 import { CreateMessageRequest, QueryGeneralRequest, Session } from '@/utils/types'
-import { ChevronDown, MessageSquare, PlusCircle, Search } from 'lucide-react'
+import { ChevronDown, MessageSquare, } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import HeaderComponent from './Header'
 import SidebarComponent from './Sidebar'
 import SearchBar from '../SearchBar'
 import { CircleSpinner } from '../CircleSpinner'
 import { queryService } from '@/services/query_service'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 
 const Dashboard = () => {
     const [sessions, setSessions] = useState<Session[]>([])

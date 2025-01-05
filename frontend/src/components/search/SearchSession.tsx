@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import SearchBar from '@/components/SearchBar';
 import { CreateMessageRequest, Message, QueryGeneralRequest, Session } from '@/utils/types';
 import { dbService } from '@/services/db_service';
-import HeaderComponent from '../home/Header';
 import SidebarComponent from '../home/Sidebar';
 import SearchMessage from './SearchMessage';
 import { queryService } from '@/services/query_service';
@@ -15,13 +13,12 @@ interface SearchSessionProps {
 }
 
 const SearchSession: React.FC<SearchSessionProps> = ({ id }) => {
-    const router = useRouter();
     const [messages, setMessages] = useState<Message[]>([]);
     const [querying, setQuerying] = useState<boolean>(false);
     const [session, setSession] = useState<Session | null>(null);
 
     const retriveResponses = async (session_id: string) => {
-        let responses = await dbService.getSessionMessages(session_id);
+        const responses = await dbService.getSessionMessages(session_id);
         if (responses == null) return;
         setMessages(responses);
     };
@@ -55,7 +52,7 @@ const SearchSession: React.FC<SearchSessionProps> = ({ id }) => {
     };
 
     useEffect(() => {
-        let session_id = String(id);
+        const session_id = String(id);
         retriveResponses(session_id);
         retriveSession(session_id);
     }, [id]);
@@ -85,7 +82,6 @@ const SearchSession: React.FC<SearchSessionProps> = ({ id }) => {
                             <SearchMessage 
                                 key={index} 
                                 response={message} 
-                                isNew={index === messages.length - 1} 
                             />
                         ))}
                     </div>

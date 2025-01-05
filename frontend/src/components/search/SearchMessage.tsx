@@ -1,14 +1,12 @@
 import { Message } from '@/utils/types';
 import { Copy, MessageSquare, ThumbsDown, ThumbsUp, UserIcon } from 'lucide-react';
-import Image from 'next/image';
 import React, { useState } from 'react';
 
 interface Props {
   response: Message;
-  isNew: boolean;
 }
 
-const SearchMessage: React.FC<Props> = ({ response, isNew }) => {
+const SearchMessage: React.FC<Props> = ({ response }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -46,7 +44,7 @@ const SearchMessage: React.FC<Props> = ({ response, isNew }) => {
           <UserIcon className="w-5 h-5 text-blue-600" />
         </div>
         <div className="flex-1">
-          <div className="text-sm text-gray-500 mb-1">You · 15m</div>
+          <div className="text-sm text-gray-500 mb-1">You · {getRelativeTimeString(response.created_at)}</div>
           <div className="text-gray-900">{response.question}</div>
         </div>
         <button className="text-gray-400 hover:text-gray-600">
@@ -60,7 +58,7 @@ const SearchMessage: React.FC<Props> = ({ response, isNew }) => {
           <MessageSquare className="w-5 h-5 text-purple-600" />
         </div>
         <div className="flex-1">
-          <div className="text-sm text-gray-500 mb-1">ChatAI · 15m</div>
+          <div className="text-sm text-gray-500 mb-1">ChatAI · {getRelativeTimeString(response.created_at)}</div>
           <div className="text-gray-900 whitespace-pre-wrap">{response.answer}</div>
         </div>
         <div className="flex gap-2">
