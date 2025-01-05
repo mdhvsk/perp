@@ -42,9 +42,10 @@ export class DBService {
     }
   }
 
-  public async createSession(): Promise<Session> {
+  public async createSession(title: string = "New Session"): Promise<Session> {
+    const body = {"title": title}
     try {
-      const response = await axios.post<Session>(`${API_BASE_URL}/sessions`);
+      const response = await axios.post<Session>(`${API_BASE_URL}/sessions`, body);
       return response.data;
     } catch (error) {
       this.handleError(error);
@@ -64,6 +65,10 @@ export class DBService {
   }
 
   public async createMessage(data: CreateMessageRequest): Promise<Message> {
+    console.log('Sending request with data:', JSON.stringify(data, null, 2));
+    if(data.sources == null){
+      data.sources = []
+    }
     try {
       const response = await axios.post<Message>(`${API_BASE_URL}/messages`, data);
       return response.data;

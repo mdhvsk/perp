@@ -7,7 +7,9 @@ from datetime import datetime
 from backend.services.search_message_service import SearchMessageService
 from backend.services.search_session_service import SearchSessionService
 from ..utils.supabase_client import get_supabase
+import logging
 
+logger = logging.getLogger(__name__)
 class SessionCreate(BaseModel):
     title: str
 
@@ -18,16 +20,18 @@ class SessionResponse(BaseModel):
     updated_at: datetime
 
 class MessageCreate(BaseModel):
-    session_id: UUID
-    role: str
-    message: str
+    session_id: str
+    question: str
+    answer: str
+    sources: List[Dict[str, Any]] = None
 
 class MessageResponse(BaseModel):
-    id: UUID
-    session_id: UUID
-    role: str
-    message: str
-    created_at: datetime
+    id: str
+    session_id: str
+    question: str
+    answer: str
+    sources: List[Dict[str, Any]]
+    created_at: str
 
 # Create the router
 router = APIRouter(prefix="/api/db", tags=["database"])
@@ -93,8 +97,10 @@ async def create_message(
     try:
         return await service.create_message(
             session_id=message.session_id,
-            role=message.role,
-            message=message.message
+            question=message.question,
+            answer=message.answer,
+            sources=message.sources
         )
     except Exception as e:
+        logging.warning("Not processable")
         raise HTTPException(status_code=500, detail=str(e))

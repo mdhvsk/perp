@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from uuid import UUID
+import logging
+logger = logging.getLogger(__name__)
 
 class SearchMessageService:
     def __init__(self, supabase_client):
@@ -30,7 +32,7 @@ class SearchMessageService:
 
     async def create_message(
         self,
-        session_id: UUID,
+        session_id: str,
         question: str,
         answer: str,
         sources: List[Dict[str, Any]] = None
@@ -59,6 +61,8 @@ class SearchMessageService:
             response = self.supabase.table(self.table_name)\
                 .insert(message_data)\
                 .execute()
+            
+            logging.info(response)
             
             return response.data[0]
         except Exception as e:

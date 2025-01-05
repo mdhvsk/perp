@@ -1,4 +1,5 @@
 import {
+    GeneralSearchResponse,
     MedicalSearchParams,
     NutritionSearchParams,
     QueryGeneralRequest,
@@ -32,9 +33,9 @@ export class QueryService {
     // General query endpoint
     public async searchGeneral(
         input: QueryGeneralRequest,
-    ): Promise<SearchResponse> {
+    ): Promise<GeneralSearchResponse> {
         try {
-            const response = await axios.post<SearchResponse>(
+            const response = await axios.post<GeneralSearchResponse>(
                 `${API_BASE_URL}/general`,
                 input,
             );

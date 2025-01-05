@@ -1,117 +1,85 @@
-import { Message } from '@/utils/types'
-import { Copy, RotateCcw, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { Message } from '@/utils/types';
+import { Copy, MessageSquare, ThumbsDown, ThumbsUp, UserIcon } from 'lucide-react';
+import Image from 'next/image';
+import React, { useState } from 'react';
 
 interface Props {
-  response: Message
-  isNew: boolean
+  response: Message;
+  isNew: boolean;
 }
 
 const SearchMessage: React.FC<Props> = ({ response, isNew }) => {
-  const [displayedText, setDisplayedText] = useState('');
   const [isCopied, setIsCopied] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-
-  const [initials, setInitials] = useState(":)");
-  const [charCount, setCharCount] = useState(0);
-  const [wordCount, setWordCount] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
-
-  const updateCounts = (text: String) => {
-    setCharCount(text.length);
-    setWordCount(text.trim() === '' ? 0 : text.trim().split(/\s+/).length);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(response.answer);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+    }
   };
 
+  const getRelativeTimeString = (timestamp: string): string => {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInMilliseconds = now.getTime() - past.getTime();
+    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+    const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
 
-
-
-
-  const isString = (value: unknown): value is string => {
-    return typeof value === 'string';
-  }
-
-  const handleOnCopy = async () => {
-    // try {
-    //   if (isString(paragraph)) {
-    //     await navigator.clipboard.writeText(paragraph);
-    //     setIsCopied(true);
-    //     setTimeout(() => {
-    //       setIsCopied(false)
-    //     }, 2000);
-
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    // }
-  }
-
-  const handleLiked = () => {
-    setIsLiked(true)
-    setTimeout(() => {
-      setIsLiked(false);
-    }, 1000)
-  }
-  const handleDisliked = () => {
-    setIsDisliked(true)
-    setTimeout(() => {
-      setIsDisliked(false)
-    }, 1000)
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+    } else {
+      return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+    }
   }
 
   return (
-    <>
-      <div className="flex items-start space-x-3">
-        <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-semibold">{initials}</span>
+    <div className="space-y-4">
+      {/* User message */}
+      <div className="flex gap-4 items-start bg-gray-50 p-4 rounded-lg">
+        <div className="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center">
+          <UserIcon className="w-5 h-5 text-blue-600" />
         </div>
-        <div className="bg-gray-800 rounded-lg p-3 flex-grow">
-
+        <div className="flex-1">
+          <div className="text-sm text-gray-500 mb-1">You · 15m</div>
+          <div className="text-gray-900">{response.question}</div>
         </div>
+        <button className="text-gray-400 hover:text-gray-600">
+          <Copy className="w-4 h-4" />
+        </button>
       </div>
 
-      <div className="flex items-start space-x-3">
-        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-5 h-5 text-white" />
+      {/* AI response */}
+      <div className="flex gap-4 items-start bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <div className="w-8 h-8 rounded-full bg-purple-100 flex-shrink-0 flex items-center justify-center">
+          <MessageSquare className="w-5 h-5 text-purple-600" />
         </div>
-        <div className="bg-gray-800 rounded-lg p-3 flex-grow">
-          {/* {isParaphrased == "true" ? (<h2><strong>Paraphrase Results:</strong></h2>) : (<h2><strong>Academic Results:</strong></h2>)} */}
-          <div className="mb-4">
-            {displayedText}
-            <span className="animate-pulse">|</span>
-          </div>
+        <div className="flex-1">
+          <div className="text-sm text-gray-500 mb-1">ChatAI · 15m</div>
+          <div className="text-gray-900 whitespace-pre-wrap">{response.answer}</div>
         </div>
-      </div>
-
-      <div className="flex justify-between items-center text-gray-400 text-sm ">
-        <div className="flex space-x-2">
-          <button className="p-1 hover:bg-gray-700 rounded" onClick={handleOnCopy}><Copy className="w-4 h-4" /></button>
-          <div className={"flex items-center text-xs rounded-md text-right text-gray-500"}>
-            {wordCount} words | {charCount} chars
-          </div>
-        </div>
-
-        <div className="flex space-x-2">
-          
-          <button className="p-1 hover:bg-gray-700 rounded"><ThumbsUp className="w-4 h-4" onClick={handleLiked} /></button>
-          <button className="p-1 hover:bg-gray-700 rounded"><ThumbsDown className="w-4 h-4" onClick={handleDisliked} /></button>
+        <div className="flex gap-2">
+          <button
+            className={`text-gray-400 hover:text-gray-600 ${isCopied ? 'text-green-500' : ''}`}
+            onClick={handleCopy}
+          >
+            <Copy className="w-4 h-4" />
+          </button>
+          <button className="text-gray-400 hover:text-gray-600">
+            <ThumbsUp className="w-4 h-4" />
+          </button>
+          <button className="text-gray-400 hover:text-gray-600">
+            <ThumbsDown className="w-4 h-4" />
+          </button>
         </div>
       </div>
+    </div>
+  );
+};
 
-      <div className="pb-8 flex justify-between items-center text-gray-400 text-sm ">
-        <div className="flex space-x-2">
-          {isCopied && (<p className='text-gray-500 animate-fade-in-out'>Copied!</p>)}
-        </div>
-        <div className="flex space-x-2">
-          {isLiked && (<p className='text-gray-500 animate-fade-in-out'>Liked!</p>)}
-          {isDisliked && (<p className='text-gray-500 animate-fade-in-out'>Disliked!</p>)}
-
-        </div>
-      </div>
-
-    </>
-  )
-}
-
-export default SearchMessage
+export default SearchMessage;

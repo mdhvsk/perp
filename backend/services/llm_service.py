@@ -114,3 +114,19 @@ class LLMService(BaseService):
                 }
                 sources.append(source)
         return sources
+    
+    def generateTitle(self, response) -> str:
+        try:
+            messages = [
+                ChatMessage(role="system", content="You are a personal trainer and nutritionist"),
+                ChatMessage(
+                    role="user", 
+                    content=f"Create a title of less than 4 words to describe this response {response}"
+                )
+            ]
+            response = self.client.chat(messages=messages)
+            return response.data[0]
+            
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))      
+        

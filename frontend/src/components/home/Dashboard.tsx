@@ -1,7 +1,7 @@
 "use client"
 import { dbService } from '@/services/db_service'
-import { QueryGeneralRequest, Session } from '@/utils/types'
-import { ChevronDown } from 'lucide-react'
+import { CreateMessageRequest, QueryGeneralRequest, Session } from '@/utils/types'
+import { ChevronDown, MessageSquare, PlusCircle, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import HeaderComponent from './Header'
@@ -9,25 +9,23 @@ import SidebarComponent from './Sidebar'
 import SearchBar from '../SearchBar'
 import { CircleSpinner } from '../CircleSpinner'
 import { queryService } from '@/services/query_service'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
-type Props = {}
-
-const Dashboard = (props: Props) => {
+const Dashboard = () => {
     const [sessions, setSessions] = useState<Session[]>([])
     const [loading, setLoading] = useState<boolean>(false)
+    const [querying, setQuerying] = useState<boolean>(false)
     const router = useRouter()
+
     useEffect(() => {
         setLoading(true)
-
         const fetchSessions = async () => {
-            const user_id = Number(localStorage.getItem('id'))
             const data = await dbService.getAllSessions()
-            setSessions(data)
+            setSessions(data.reverse())
             setLoading(false)
-            console.log(data)
         };
         fetchSessions();
-
     }, [])
 
     const getRelativeTimeString = (timestamp: string): string => {
@@ -39,11 +37,11 @@ const Dashboard = (props: Props) => {
         const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
 
         if (diffInMinutes < 60) {
-            return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+            return `${diffInMinutes}m ago`;
         } else if (diffInHours < 24) {
-            return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+            return `${diffInHours}h ago`;
         } else {
-            return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+            return `${diffInDays}d ago`;
         }
     }
 
@@ -52,55 +50,107 @@ const Dashboard = (props: Props) => {
     }
 
     const handleSubmit = async (prompt: string) => {
-        // create new session
-        // use session id pass into new page
-        // create new query message
-        const new_session = await handleNewSession()
-
+        setQuerying(true)
+        try {
+            const new_session = await handleNewSession()
+            if (new_session == null) return;
+            await handleQuery(prompt, new_session.id)
+            handleClickSession(new_session.id)
+        } finally {
+            setQuerying(false)
+        }
     }
 
     const handleNewSession = async () => {
         const session = await dbService.createSession()
-        if (session == null) return
-        return session.id
-
+        if (session == null) return null
+        return session
     }
 
-    const handleQuery = async (prompt: string) => {
-        const body: QueryGeneralRequest = {query: prompt}
+    const handleQuery = async (prompt: string, session_id: string) => {
+        const body: QueryGeneralRequest = { query: prompt }
         const message = await queryService.searchGeneral(body)
-        
-
+        const messageBody: CreateMessageRequest = {
+            session_id: session_id,
+            question: prompt,
+            answer: message.answer,
+            sources: message.sources ? [{}] : []
+        }
+        await dbService.createMessage(messageBody)
     }
 
     return (
-        <div className="bg-gray-300 text-black min-h-screen p-8">
-            <HeaderComponent />
+        <div className="flex h-screen bg-gray-50">
             <SidebarComponent />
-            <h2 className="text-4xl font-light mb-8 flex justify-center">
-                Hi !
-            </h2>
-            <SearchBar isHome={true} onResponse={() => { } } onQuery={handleQuery} onSubmit={handleSubmit} />
+            <div className="flex-1 flex flex-col">
+                <div className="flex items-center justify-between p-4 border-b">
+                </div>
 
-            <div className="max-w-3xl mx-auto space-y-2 my-4">
-                <h3 className="flex items-center text-lg mb-4">
-                    Your recent searches
-                    <ChevronDown size={16} className="ml-2 mr-8" />
-                    {loading && <CircleSpinner />}
+                <div className="flex-1 overflow-auto px-4 py-8">
+                    <div className="max-w-3xl mx-auto space-y-8">
+                        {/* Welcome Section */}
+                        <div className="text-center space-y-4">
+                            <h2 className="text-4xl font-light text-gray-900">
+                                Welcome to ChatAI
+                            </h2>
+                            <p className="text-gray-500">
+                                Ask me anything about health and wellness
+                            </p>
+                        </div>
 
-                </h3>
-                <div className="grid grid-cols-3 gap-4">
-                    {sessions.slice(0, 6).map((session, index) => (
-                        <button key={index} className="bg-gray-800 p-4 rounded-lg hover:bg-gray-600" onClick={() => handleClickSession(session.id)}>
-                            <h4 className="font-medium mb-2">{session.title}</h4>
-                            <p className="text-sm text-gray-400">{getRelativeTimeString(session.updated_at)}</p>
-                        </button>
-                    ))}
+                        <SearchBar onSubmit={handleSubmit} loading={querying} />
 
+                        {/* Recent Searches */}
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
+                                    Recent conversations
+                                    {loading && <CircleSpinner />}
+                                </h3>
+                                <Button variant="ghost" size="sm" className="text-gray-500">
+                                    <ChevronDown className="w-4 h-4" />
+                                    View all
+                                </Button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+
+                                {sessions.slice(0, 6).map((session, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handleClickSession(session.id)}
+                                        className="h-32 p-4 bg-white border border-gray-200 rounded-lg hover:border-purple-400 transition-colors text-left group"
+                                    >
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <MessageSquare className="w-4 h-4 text-purple-600" />
+                                            <span className="text-sm font-medium text-gray-900 group-hover:text-purple-600 truncate">
+                                                {session.title}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-gray-500 mb-4 line-clamp-2">
+                                            Click to continue your conversation...
+                                        </p>
+                                        <span className="text-xs text-gray-400">
+                                            {getRelativeTimeString(session.updated_at)}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-4 border-t bg-white">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="text-xs text-gray-500 text-center">
+                            ChatAI has the potential to generate incorrect information.
+                        </div>
+                    </div>
                 </div>
             </div>
-
-        </div>)
+        </div>
+    )
 }
 
 export default Dashboard

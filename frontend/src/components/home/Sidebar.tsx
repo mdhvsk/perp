@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CirclePlus, Search, FolderIcon, Star, Archive, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen, MessageSquare, PanelRightOpen } from 'lucide-react';
+import { CirclePlus, Search, FolderIcon, Star, Archive, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen, MessageSquare, PanelRightOpen, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,8 +10,12 @@ import { Separator } from "@/components/ui/separator";
 import { Session } from '@/utils/types';
 import { dbService } from '@/services/db_service';
 
-const SidebarComponent = () => {
-    const [isOpen, setIsOpen] = useState(false);
+
+interface SidebarProps {
+    id?: string
+}
+const SidebarComponent: React.FC<SidebarProps> = ({id}) => {
+    const [isOpen, setIsOpen] = useState(true);
     const [sessions, setSessions] = useState<Session[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const router = useRouter()
@@ -21,7 +25,7 @@ const SidebarComponent = () => {
         const fetchSessions = async () => {
             const user_id = Number(localStorage.getItem('id'))
             const data = await dbService.getAllSessions()
-            setSessions(data)
+            setSessions(data.reverse())
             setLoading(false)
             console.log(data)
         };
@@ -56,7 +60,7 @@ const SidebarComponent = () => {
     }
 
     return (
-        <>
+        <div className='z-50'>
             <div className={`fixed top-0 left-0 h-full w-64 bg-white flex flex-col transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="p-4 space-y-4">
                     <Button
@@ -115,7 +119,7 @@ const SidebarComponent = () => {
 
                                     onClick={() => handleGoToChat(session.id)} // Test with a simple console.log first
 
-                                    className={`w-full justify-start gap-2 text-gray-700 hover:bg-gray-100 rounded-lg ${index === 3 ? 'bg-[#7C3AED]/10 text-[#7C3AED]' : ''}`}
+                                    className={`w-full justify-start gap-2 text-gray-700 hover:bg-gray-100 rounded-lg ${session.id === id ? 'bg-[#7C3AED]/10 text-[#7C3AED]' : ''}`}
                                 >
                                     <MessageSquare size={16} />
                                     <div className="flex flex-col items-start">
@@ -147,12 +151,7 @@ const SidebarComponent = () => {
 
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                            <Image
-                                src="/profile-placeholder.jpg"
-                                alt="Profile"
-                                width={32}
-                                height={32}
-                            />
+                            <UserIcon width={32} height={32}/>
                         </div>
                         <div className="flex flex-col">
                             <span className="text-sm font-medium text-gray-900">Madhav Asok</span>
@@ -180,7 +179,7 @@ const SidebarComponent = () => {
                     <PanelLeftOpen size={20} className="text-gray-700" />
                 </Button>
             )}
-        </>
+        </div>
     );
 };
 
