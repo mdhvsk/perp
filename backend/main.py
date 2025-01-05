@@ -8,7 +8,6 @@ from backend.routes import db_router
 from .routes import ingestion
 from .routes import retrieval
 import logging
-import os 
 
 logging.basicConfig(
     level=logging.INFO,  # Set the logging level
@@ -32,7 +31,6 @@ app.add_middleware(
 )
 
 
-port = os.getenv("PORT", "8000")
 
 
 app.include_router(ingestion.router)
