@@ -1,4 +1,4 @@
-import { Session, CreateMessageRequest, CreateSessionRequest, Message } from '@/utils/types';
+import { Session, CreateMessageRequest, Message } from '@/utils/types';
 import axios, { AxiosError } from 'axios';
 
 const API_BASE_URL = 'http://localhost:8000/api/db';
@@ -42,9 +42,9 @@ export class DBService {
     }
   }
 
-  public async createSession(data: CreateSessionRequest): Promise<Session> {
+  public async createSession(): Promise<Session> {
     try {
-      const response = await axios.post<Session>(`${API_BASE_URL}/sessions`, data);
+      const response = await axios.post<Session>(`${API_BASE_URL}/sessions`);
       return response.data;
     } catch (error) {
       this.handleError(error);

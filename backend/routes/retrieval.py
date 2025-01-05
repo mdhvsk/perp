@@ -1,10 +1,13 @@
 # app/api/routes/notes.py
 from fastapi import APIRouter, FastAPI, HTTPException, Query, File, UploadFile, Body
-from typing import List, Optional
+from typing import Dict, List, Optional
 from pydantic import BaseModel
 
 from backend.services.llm_service import LLMService
 
+
+class QueryGeneral(BaseModel):
+    query: str
 
 class SearchResponse(BaseModel):
     query: str
@@ -21,13 +24,11 @@ llm_service = LLMService()  # Add your vector_store if available
 
 @router.post("/general")
 async def search_health_information(
-    query: str,
-    filters: dict = Body(default={}),
-    max_results: int = 5
-) -> str:
-    llm = LLMService()
+    input: QueryGeneral,
+):
     
-    return llm.query(query)
+    response =  llm_service.query(input.query)
+    return response
   
 
 @router.post("/nutrition")
@@ -53,5 +54,6 @@ async def search_medical_information(
 # Initialize LLM service
 
 @router.post("/ask")
-async def ask_health_question(request: str):
-    return llm_service.query_with_research(request)
+async def ask_health_question(input: QueryGeneral,
+):
+    return llm_service.query_with_research(input.query)

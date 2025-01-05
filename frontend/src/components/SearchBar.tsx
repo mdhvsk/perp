@@ -1,64 +1,26 @@
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
-import { Paperclip, Sparkles } from 'lucide-react';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import { Camera, Mic, Search, SendHorizontal } from 'lucide-react';
 import { CircleSpinner } from './CircleSpinner';
 import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button";
+import { Input } from './ui/input';
+import { dbService } from '@/services/db_service';
 
 interface Props {
-    isHome: boolean
-    onResponse: (prompt: string, isParaphrase: string, paragraph: string) => void
+    isHome: boolean;
+    onResponse: (prompt: string, isParaphrase: string, paragraph: string) => void;
+    handleQuery: (prompt: string) => void;
+    onSubmit: () => void;
 }
 
-const SearchBar: React.FC<Props> = ({ isHome, onResponse }) => {
+const SearchBar: React.FC<Props> = ({ isHome, onResponse, onSubmit }) => {
     const [formData, setFormData] = useState({
         prompt: '',
-        paraphrase: false,
     });
 
-    const [wordCount, setWordCount] = useState(0);
-    const [charCount, setCharCount] = useState(0);
+
     const messageRef = useRef<HTMLTextAreaElement>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter();
-    const [fileName, setFileName] = useState<string>('');
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-        setFileName(file.name);
-        if (file.type === 'application/pdf') {
-            // For PDF files, we need to use a PDF.js or similar library
-            console.log('PDF files require additional processing');
-            // Implement PDF reading logic here
-        } else {
-            const text = await readFileContent(file);
-            setFormData(prevState => ({
-                ...prevState,
-                ["prompt"]: text
-            }));
-            updateCounts(text)
-        }
-    };
-
-    const readFileContent = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => resolve(event.target?.result as string);
-            reader.onerror = (error) => reject(error);
-            reader.readAsText(file);
-        });
-    };
-    const updateCounts = (text: String) => {
-        setCharCount(text.length);
-        setWordCount(text.trim() === '' ? 0 : text.trim().split(/\s+/).length);
-    };
-
-    const handleToggle = () => {
-        setFormData(prevState => ({
-            ...prevState,
-            paraphrase: !prevState.paraphrase
-        }));
-    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -66,47 +28,19 @@ const SearchBar: React.FC<Props> = ({ isHome, onResponse }) => {
             ...prevState,
             [name]: value
         }));
-        if (name === 'prompt') {
-            updateCounts(value);
-        }
     };
 
-    const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
-        // e.preventDefault()
-        // try {
-        //     setIsLoading(true)
+    
 
-        //     if (formData.prompt.length > 600 || formData.prompt.length == 0) {
-        //         setIsLoading(false)
-        //         return
-        //     }
-            
-        //     const user_id = Number(localStorage.getItem('id'))
-        //     const output_paragraph = await paraphraseApi(formData.prompt, formData.paraphrase);
+    const handleQuery = async () => {
 
-        //     if (isHome) {
-        //         const output_summary = await summarizeText(formData.prompt);
-        //         const essay = await insertEssay(user_id, output_summary)
-        //         if (essay == null) return
-        //         const essay_id = essay.id
-        //         await insertResponse(essay_id, formData.paraphrase, output_paragraph, formData.prompt)
-        //         router.push({ pathname: '/writing', query: { id: String(essay_id)} });
-        //     } else {
-        //         onResponse(formData.prompt, String(formData.paraphrase), output_paragraph)
-        //         setFormData(prevState => ({
-        //             ...prevState,
-        //             ["prompt"]: ""
-        //         }));
-        //     }
+    }
 
-        //     setIsLoading(false);
-        //     setFileName("")
+    const handleNewSession = async () => {
+        const session = await dbService.createSession()
+        if(session == null) return
 
-        // } catch (err) {
-        //     console.log(err);
-        //     setIsLoading(false);
-        // }
-
+        
     }
 
     useEffect(() => {
@@ -121,48 +55,38 @@ const SearchBar: React.FC<Props> = ({ isHome, onResponse }) => {
         }
     };
 
-    const handleFileClick = () => {
-        fileInputRef.current?.click();
-    };
-
     return (
-        <div className='max-w-3xl mx-auto space-y-2 '>
-            <div className="flex flex-col items-center justify-center space-x-2 ">
-                <textarea
+        <div className="w-full max-w-3xl mx-auto flex items-center gap-2">
+            <div className="flex-grow flex items-center relative bg-white rounded-full shadow-sm border border-gray-200">
+                <div className="absolute left-4 text-gray-400">
+                    <Camera size={20} />
+                </div>
+                <Input
                     id="prompt"
                     name="prompt"
                     onChange={handleChange}
                     value={formData.prompt}
-                    ref={messageRef}
-                    placeholder="Ask any of your health, nutrition, or fitness related questions here"
-                    className="w-full p-6 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                </textarea>
-            </div>
-            <div className="flex justify-between items-center space-x-2">
-                <input
-                    type="file"
-                    accept=".txt,.docx,.pdf,.doc"
-                    onChange={handleFileChange}
-                    ref={fileInputRef}
-                    className="sr-only"
+                    placeholder="Enter a prompt here..."
+                    className="border-0 focus-visible:ring-0 focus:outline-none text-gray-600 pl-12 pr-12 py-6 text-base placeholder:text-gray-400"
                 />
-                
+                <div className="absolute right-4 text-gray-400">
+                    <Mic size={20} />
+                </div>
             </div>
-            <div className="flex justify-between items-center space-x-2">
-                {/* <ParaphraseToggle onToggle={handleToggle} /> */}
-                {/* <SegmentedButton onToggle={handleToggle}/> */}
-                <button className="flex items-center bg-blue-700 hover:bg-blue-600 px-6 py-3 rounded-md text-md font-semibold" onClick={handleSubmit}>
-                    Search
-                    <Sparkles size={16} className="mx-2" />
-
-                </button>
-            </div>
-            <div className='flex justify-center items-center mb-8'>
-                {isLoading && (<CircleSpinner />)}
-            </div>
+            <Button
+                onClick={() => onSubmit}
+                size="icon"
+                className="h-12 w-12 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white"
+                disabled={isLoading}
+            >
+                {isLoading ? (
+                    <CircleSpinner />
+                ) : (
+                    <SendHorizontal size={20} className="text-white" />
+                )}
+            </Button>
         </div>
-    )
-}
+    );
+};
 
-export default SearchBar
+export default SearchBar;

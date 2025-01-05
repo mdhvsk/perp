@@ -1,6 +1,6 @@
 "use client"
 import { dbService } from '@/services/db_service'
-import { Session } from '@/utils/types'
+import { QueryGeneralRequest, Session } from '@/utils/types'
 import { ChevronDown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -8,6 +8,7 @@ import HeaderComponent from './Header'
 import SidebarComponent from './Sidebar'
 import SearchBar from '../SearchBar'
 import { CircleSpinner } from '../CircleSpinner'
+import { queryService } from '@/services/query_service'
 
 type Props = {}
 
@@ -29,14 +30,14 @@ const Dashboard = (props: Props) => {
 
     }, [])
 
-    const getRelativeTimeString = (timestamp: string): string  =>{
+    const getRelativeTimeString = (timestamp: string): string => {
         const now = new Date();
         const past = new Date(timestamp);
         const diffInMilliseconds = now.getTime() - past.getTime();
         const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
         const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
         const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-    
+
         if (diffInMinutes < 60) {
             return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
         } else if (diffInHours < 24) {
@@ -50,8 +51,29 @@ const Dashboard = (props: Props) => {
         router.push(`/session/${session_id}`)
     }
 
+    const handleSubmit = async (prompt: string) => {
+        // create new session
+        // use session id pass into new page
+        // create new query message
+        const new_session = await handleNewSession()
+
+    }
+
+    const handleNewSession = async () => {
+        const session = await dbService.createSession()
+        if (session == null) return
+        return session.id
+
+    }
+
+    const handleQuery = async (prompt: string) => {
+        const body: QueryGeneralRequest = {query: prompt}
+        const message = await queryService.searchGeneral(body)
+
+    }
+
     return (
-        <div className="bg-gray-900 text-gray-200 min-h-screen p-8">
+        <div className="bg-gray-300 text-black min-h-screen p-8">
             <HeaderComponent />
             <SidebarComponent />
             <h2 className="text-4xl font-light mb-8 flex justify-center">
