@@ -69,6 +69,7 @@ const Dashboard = (props: Props) => {
     const handleQuery = async (prompt: string) => {
         const body: QueryGeneralRequest = {query: prompt}
         const message = await queryService.searchGeneral(body)
+        
 
     }
 
@@ -79,7 +80,7 @@ const Dashboard = (props: Props) => {
             <h2 className="text-4xl font-light mb-8 flex justify-center">
                 Hi !
             </h2>
-            <SearchBar isHome={true} onResponse={() => { }} />
+            <SearchBar isHome={true} onResponse={() => { } } onQuery={handleQuery} onSubmit={handleSubmit} />
 
             <div className="max-w-3xl mx-auto space-y-2 my-4">
                 <h3 className="flex items-center text-lg mb-4">

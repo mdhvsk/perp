@@ -9,8 +9,8 @@ import { dbService } from '@/services/db_service';
 interface Props {
     isHome: boolean;
     onResponse: (prompt: string, isParaphrase: string, paragraph: string) => void;
-    handleQuery: (prompt: string) => void;
-    onSubmit: () => void;
+    onQuery: (prompt: string) => void;
+    onSubmit: (prompt: string) => void;
 }
 
 const SearchBar: React.FC<Props> = ({ isHome, onResponse, onSubmit }) => {
@@ -32,9 +32,6 @@ const SearchBar: React.FC<Props> = ({ isHome, onResponse, onSubmit }) => {
 
     
 
-    const handleQuery = async () => {
-
-    }
 
     const handleNewSession = async () => {
         const session = await dbService.createSession()
