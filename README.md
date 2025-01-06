@@ -1,6 +1,10 @@
 # RAG-Powered Health/Nutrition Answer Engine
 
-A full-stack application that provides AI-powered answers to research queries using RAG (Retrieval Augmented Generation) technology. The system retrieves relevant research papers from arXiv, generates accurate responses using OpenAI's LLM, and maintains context through vector similarity search.
+A full-stack application that provides AI-powered answers to health, nutrition, and fitness queries using RAG (Retrieval Augmented Generation) technology. The system retrieves relevant research papers from arXiv, generates accurate responses using OpenAI's LLM, and maintains context through vector similarity search.
+
+
+## Deployed App
+https://perp-henna.vercel.app/
 
 ## 🚀 Features
 
