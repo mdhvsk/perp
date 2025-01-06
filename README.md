@@ -65,6 +65,7 @@ LlamaIndex Core framework used for:
 
 
 arXiv API: Primary source for research papers
+
 OpenAI API used for:
 - Text embeddings (text-embedding-ada-002)
 - LLM generation (gpt-4-turbo)
