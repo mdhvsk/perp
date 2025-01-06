@@ -7,8 +7,8 @@ import SidebarComponent from './Sidebar'
 import SearchBar from '../SearchBar'
 import { queryService } from '@/services/query_service'
 import WelcomeSection from './WelcomeSection'
-import { RecentSessions } from './RecentSession'
 import Footer from './Footer'
+import RecentSessions from './RecentSession'
 
 const Dashboard = () => {
     const [sessions, setSessions] = useState<Session[]>([])
