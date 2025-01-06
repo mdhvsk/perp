@@ -8,7 +8,6 @@ import os
 
 @dataclass
 class ServiceConfig:
-    """Configuration for all services."""
     openai_api_key: str
     pinecone_api_key: str
     index_name: str
@@ -18,11 +17,9 @@ class ServiceConfig:
     top_k: int = 5
 
 class BaseService:
-    """Base service with shared configuration and initialization."""
     
     @staticmethod
     def _load_default_config() -> ServiceConfig:
-        """Load configuration from environment variables."""
         load_dotenv()
         return ServiceConfig(
             openai_api_key=os.getenv('OPENAI_API_KEY', ''),
@@ -31,7 +28,6 @@ class BaseService:
         )
 
     def _create_vector_store(self) -> PineconeVectorStore:
-        """Create and configure the vector store."""
         pc = PineconeGRPC(api_key=self.config.pinecone_api_key)
         pinecone_index = pc.Index(self.config.index_name)
         return PineconeVectorStore(pinecone_index=pinecone_index)

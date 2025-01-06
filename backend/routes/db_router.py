@@ -35,20 +35,16 @@ class MessageResponse(BaseModel):
     created_at: str
 
 class TitleRequest(BaseModel):
-    """Request model for title generation"""
     text: str
     session_id: Optional[str] = None
 
 class TitleResponse(BaseModel):
-    """Response model for title generation"""
     title: str
     session_id: Optional[str] = None
     updated: bool = False
 
-# Create the router
 router = APIRouter(prefix="/api/db", tags=["database"])
 
-# Dependency to get our services
 async def get_search_session_service():
     return SearchSessionService(get_supabase())
 
@@ -122,15 +118,7 @@ async def generate_title(
     request: TitleRequest,
     search_session_service: SearchSessionService = Depends(get_search_session_service)
 ):
-    """
-    Generate a short title and optionally update session title.
-    
-    Args:
-        request: TitleRequest containing the text and optional session_id
-    
-    Returns:
-        TitleResponse containing the generated title and session update status
-    """
+
     try:
         # Generate title
         llm = llm_service.LLMService()

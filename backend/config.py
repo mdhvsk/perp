@@ -12,6 +12,5 @@ class Settings(BaseSettings):
 
 
 def get_settings():
-    """Cache settings to avoid reloading .env file"""
     return Settings()
 

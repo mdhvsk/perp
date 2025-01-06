@@ -37,7 +37,6 @@ async def search_nutrition_data(
     dietary_restrictions: List[str] = Query(None),
     allergies: List[str] = Query(None)
 ) -> dict:
-    """Specialized nutrition search with dietary considerations."""
     pass
 
 @router.post("/medical")
@@ -46,7 +45,6 @@ async def search_medical_information(
     include_research: bool = False,
     credentials: Optional[dict] = None
 ) -> dict:
-    """Medical information search with optional research paper inclusion."""
     pass
 
 

@@ -14,16 +14,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 class LLMService(BaseService):
-    """Service for handling LLM operations."""
     
     def __init__(self, embedding_service: EmbeddingService = None, config: Optional[ServiceConfig] = None):
-        """
-        Initialize LLM service.
         
-        Args:
-            embedding_service: Optional EmbeddingService instance to share vector store
-            config: Optional configuration
-        """
         self.config = config or self._load_default_config()
         self.client = OpenAI(api_key=self.config.openai_api_key)
         
@@ -36,7 +29,6 @@ class LLMService(BaseService):
         self.query_engine = self._setup_retrieval()
 
     def _setup_retrieval(self) -> RetrieverQueryEngine:
-        """Set up the retrieval pipeline."""
         index = VectorStoreIndex.from_vector_store(self.vector_store)
         retriever = VectorIndexRetriever(
             index=index,
@@ -50,7 +42,6 @@ class LLMService(BaseService):
         )
 
     def query(self, question: str) -> Dict[str, Any]:
-        """Basic query without research context."""
         try:
             messages = [
                 ChatMessage(role="system", content="You are a personal trainer and nutritionist"),
@@ -68,7 +59,6 @@ class LLMService(BaseService):
             raise HTTPException(status_code=500, detail=str(e))
 
     def query_with_research(self, question: str) -> Dict[str, Any]:
-        """Query with research context from vector store."""
         try:
             # Get research context
             research_response = self.query_engine.query(question)
@@ -100,7 +90,6 @@ class LLMService(BaseService):
             }
 
     def _extract_sources(self, response) -> List[Dict[str, Any]]:
-        """Extract source information from response."""
         sources = []
         if hasattr(response, 'source_nodes'):
             for node in response.source_nodes:
@@ -118,15 +107,7 @@ class LLMService(BaseService):
         return sources
     
     def generate_short_title(self, text: str) -> str:
-        """
-        Generate a short title (up to 3 words) for a given text.
-        
-        Args:
-            text: Text content to generate title for
-            
-        Returns:
-            A string containing up to 3 words as a title
-        """
+
         try:
             messages = [
                 ChatMessage(

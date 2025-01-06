@@ -90,7 +90,7 @@ const SearchSession: React.FC<SearchSessionProps> = ({ id }) => {
                     <div className="max-w-3xl mx-auto">
                         <SearchBar onSubmit={handleSubmit} loading={querying} />
                         <div className="text-xs text-gray-500 mt-2 text-center">
-                            ChatAI has the potential to generate incorrect information.
+                        Vitality.ai has the potential to generate incorrect information.
                         </div>
                     </div>
                 </div>

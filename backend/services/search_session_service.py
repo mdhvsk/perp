@@ -8,12 +8,7 @@ class SearchSessionService:
         self.table_name = 'search_sessions'
 
     async def get_all_sessions(self) -> List[Dict[str, Any]]:
-        """
-        Retrieve all search sessions from the table.
-        
-        Returns:
-            List[Dict[str, Any]]: List of all search sessions
-        """
+
         try:
             response = self.supabase.table(self.table_name)\
                 .select('*')\
@@ -25,15 +20,7 @@ class SearchSessionService:
             raise Exception(f"Error fetching search sessions: {str(e)}")
 
     async def get_session_by_id(self, session_id: UUID) -> Optional[Dict[str, Any]]:
-        """
-        Retrieve a specific search session by its ID.
-        
-        Args:
-            session_id (UUID): The UUID of the search session to retrieve
-            
-        Returns:
-            Optional[Dict[str, Any]]: The search session if found, None otherwise
-        """
+
         try:
             response = self.supabase.table(self.table_name)\
                 .select('*')\
@@ -46,15 +33,7 @@ class SearchSessionService:
             raise Exception(f"Error fetching search session by ID: {str(e)}")
 
     async def create_session(self, title: str) -> Dict[str, Any]:
-        """
-        Create a new search session.
-        
-        Args:
-            title (str): The title of the search session
-            
-        Returns:
-            Dict[str, Any]: The created search session
-        """
+
         try:
             current_time = datetime.utcnow().isoformat()
             session_data = {

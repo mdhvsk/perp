@@ -23,15 +23,6 @@ class DocumentService:
     def process_and_embed_papers(self, query: str) -> dict:
         logger.info(f"Processing papers for query: {query}")
 
-        """
-        Fetch papers, process them, and create embeddings.
-        
-        Args:
-            query: Search query for arXiv
-            
-        Returns:
-            Dictionary with processing statistics
-        """
         try:
             # Fetch papers
             logger.info(f"Processing papers for query: {query}")
@@ -67,9 +58,7 @@ class DocumentService:
 
     def fetch_papers(self, query: str, sort_by: arxiv.SortCriterion = arxiv.SortCriterion.SubmittedDate) -> List[dict]:
         logging.info(f"Fetching papers for this query {query}")
-        """
-        Fetch papers from arxiv based on query.
-        """
+
         # Create search object with parameters
         search = arxiv.Search(
             query=query,
@@ -171,16 +160,7 @@ class DocumentService:
         
     @staticmethod
     def clean_up_text(content: str) -> str:
-        """
-        Remove unwanted characters and patterns in text input.
-        Handles Unicode surrogate pairs and invalid characters.
 
-        Args:
-            content: Text input.
-        
-        Returns:
-            Cleaned version of original text input.
-        """
         try:
             # Handle surrogate pairs by encoding and decoding with error handling
             content = content.encode('utf-16', 'surrogatepass').decode('utf-16', 'replace')

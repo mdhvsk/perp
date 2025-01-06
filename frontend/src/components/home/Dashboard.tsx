@@ -91,7 +91,7 @@ const Dashboard = () => {
                         {/* Welcome Section */}
                         <div className="text-center space-y-4">
                             <h2 className="text-4xl font-light text-gray-900">
-                                Welcome to ChatAI
+                                Welcome to Vitality.ai
                             </h2>
                             <p className="text-gray-500">
                                 Ask me anything about health and wellness
@@ -144,7 +144,7 @@ const Dashboard = () => {
                 <div className="p-4 border-t bg-white">
                     <div className="max-w-3xl mx-auto">
                         <div className="text-xs text-gray-500 text-center">
-                            ChatAI has the potential to generate incorrect information.
+                        Vitality.ai has the potential to generate incorrect information.
                         </div>
                     </div>
                 </div>

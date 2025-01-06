@@ -54,7 +54,7 @@ const SearchBar: React.FC<Props> = ({ onSubmit, loading}) => {
                     name="prompt"
                     onChange={handleChange}
                     value={formData.prompt}
-                    placeholder="Enter a prompt here..."
+                    placeholder="Ask your health, nutrition, and fitness questions here"
                     className="border-0 focus-visible:ring-0 focus:outline-none text-gray-600 pl-12 pr-12 py-6 text-base placeholder:text-gray-400"
                 />
                 

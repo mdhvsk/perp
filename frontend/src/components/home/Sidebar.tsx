@@ -124,7 +124,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({id}) => {
                         </div>
                         <div className="flex flex-col">
                             <span className="text-sm font-medium text-gray-900">Madhav Asok</span>
-                            <span className="text-xs text-gray-500">Pro trial</span>
                         </div>
                         <Button
                             variant="outline"

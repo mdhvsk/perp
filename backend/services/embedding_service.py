@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 import time
 from typing import List, Optional
 from llama_index.core import Document
@@ -6,10 +5,7 @@ from llama_index.core import Document
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.core.ingestion import IngestionPipeline
-from pinecone.grpc import PineconeGRPC
-from llama_index.vector_stores.pinecone import PineconeVectorStore
-import arxiv
-from llama_index.readers.file import PDFReader
+
 
 
 from backend.services.base_service import BaseService, ServiceConfig
@@ -18,7 +14,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class EmbeddingService(BaseService):
-    """Service for managing embeddings and vector storage."""
     
     def __init__(self, config: Optional[ServiceConfig] = None):
         self.config = config or self._load_default_config()
@@ -27,13 +22,11 @@ class EmbeddingService(BaseService):
 
     
     def _initialize_components(self) -> None:
-        """Initialize all service components."""
         self.embedding_model = OpenAIEmbedding(api_key=self.config.openai_api_key)
         self.vector_store = self._create_vector_store()
         self.pipeline = self._create_ingestion_pipeline()
     
     def _create_ingestion_pipeline(self) -> IngestionPipeline:
-        """Create and configure the ingestion pipeline."""
         return IngestionPipeline(
             transformations=[
                 SemanticSplitterNodeParser(
@@ -47,9 +40,6 @@ class EmbeddingService(BaseService):
         )
     
     def run_pipeline(self, documents: List[Document] | None):
-        """Run the ingestion pipeline on documents."""
-        # print("Running pipeline")
-        # self.pipeline.run(documents=docs)
         if not documents:
             logger.warning("No documents provided to process")
             return

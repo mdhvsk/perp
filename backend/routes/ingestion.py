@@ -14,13 +14,11 @@ embedding_service = EmbeddingService()
 document_service = DocumentService(embedding_service, 3)
 
 class FetchPapersResponse(BaseModel):
-    """Response model for fetched papers"""
     papers_fetched: int
     papers: List[dict]
     query: str
 
 class ProcessingResponse(BaseModel):
-    """Response model for document processing"""
     status: str
     message: str
     documents_processed: Optional[int] = None
@@ -30,9 +28,7 @@ async def fetch_papers(
     keyword: str = Query(..., description="Search keyword for arXiv papers"),
     max_results: Optional[int] = Query(10, description="Maximum number of papers to fetch")
 ):
-    """
-    Fetch papers from arXiv without processing them.
-    """
+   
     try:
         # Override max_results temporarily
         original_max = document_service.max_results
@@ -54,9 +50,7 @@ async def fetch_papers(
 
 @router.post("/documents/process")
 async def process_documents():
-    """
-    Process all PDF documents in the backend/papers directory.
-    """
+
     try:
         # Get all PDFs in the papers directory
         papers_dir = Path("backend/papers")
@@ -99,10 +93,6 @@ async def process_documents():
 
 @router.post("/embeddings/create")
 async def create_embeddings():
-    """
-    Run the embedding pipeline on processed documents in memory.
-    Note: Documents must be processed first using /documents/process
-    """
     try:
         # Get the processed documents
         papers_dir = Path("backend/papers")
@@ -151,9 +141,6 @@ async def create_embeddings():
 async def query_archive(
     keyword: str = Query(..., description="Search keyword for arXiv papers")
 ):
-    """
-    Complete pipeline: fetch papers, process them, and create embeddings.
-    """
     logging.info(f"Querying /document/topic for keyword: {keyword}")
     result = document_service.process_and_embed_papers(keyword)
     
@@ -169,19 +156,15 @@ async def upload_health_document(
     source: str = Query(..., description="Source of the document (e.g., WHO, NIH, peer-reviewed journal)"),
     year: Optional[int] = Query(None, description="Publication year")
 ):
-    """Upload and index health-related documents with metadata."""
     pass
 
 @router.get("/documents/categories")
 async def get_document_categories():
-    """Get all available document categories and their statistics."""
     pass
 
 
 @router.post("/document")
 async def upload_document(file: UploadFile = File(...)):
-    
-    
     pass
 
 @router.post("/documents/topic")

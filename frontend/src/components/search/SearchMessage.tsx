@@ -58,7 +58,7 @@ const SearchMessage: React.FC<Props> = ({ response }) => {
           <MessageSquare className="w-5 h-5 text-purple-600" />
         </div>
         <div className="flex-1">
-          <div className="text-sm text-gray-500 mb-1">ChatAI · {getRelativeTimeString(response.created_at)}</div>
+          <div className="text-sm text-gray-500 mb-1">Vitality.ai · {getRelativeTimeString(response.created_at)}</div>
           <div className="text-gray-900 whitespace-pre-wrap">{response.answer}</div>
         </div>
         <div className="flex gap-2">
