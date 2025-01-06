@@ -34,6 +34,7 @@ A full-stack application that provides AI-powered answers to research queries us
 - Pinecone API key
 - Supabase account and credentials
 - arXiv API access
+- LlamaIndex API key
 
 
 ## Architecture Diagram 
@@ -98,7 +99,7 @@ npm run dev
    - Generate a comprehensive answer using OpenAI's LLM
    - Store the conversation in Supabase
 
-🔄 RAG Pipeline
+## 🔄 RAG Pipeline
 The RAG pipeline is implemented using LlamaIndex's powerful data framework, which handles:
 
 Document Retrieval: Fetches relevant research papers from arXiv based on user query using LlamaIndex's Document Loaders
@@ -107,7 +108,7 @@ Vector Storage: Stores embeddings in Pinecone using LlamaIndex's VectorStoreInde
 Context Retrieval: Retrieves relevant context based on query similarity using LlamaIndex's query engine
 Answer Generation: Generates comprehensive answers using OpenAI's LLM through LlamaIndex's LLMPredictor
 
-📚 Dependencies & APIs
+## 📚 Dependencies & APIs
 
 LlamaIndex: Core framework used for:
 
