@@ -8,6 +8,8 @@ from backend.routes import db_router
 from .routes import ingestion
 from .routes import retrieval
 import logging
+import uvicorn
+import os
 
 logging.basicConfig(
     level=logging.INFO,  # Set the logging level
@@ -57,3 +59,16 @@ async def health_check():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+if __name__ == "__main__":
+
+    
+    port = int(os.getenv("PORT", 8000))
+    
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=port,
+        reload=True,
+        log_level="info"
+    )
