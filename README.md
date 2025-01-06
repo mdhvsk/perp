@@ -24,6 +24,7 @@ A full-stack application that provides AI-powered answers to research queries us
 - OpenAI API
 - Pinecone
 - Supabase
+- LlamaIndex
 
 ## 📋 Prerequisites
 
@@ -97,29 +98,35 @@ npm run dev
    - Generate a comprehensive answer using OpenAI's LLM
    - Store the conversation in Supabase
 
-## 🔄 RAG Pipeline
+🔄 RAG Pipeline
+The RAG pipeline is implemented using LlamaIndex's powerful data framework, which handles:
 
-1. **Document Retrieval**: Fetches relevant research papers from arXiv based on user query
-2. **Embedding Generation**: Creates embeddings for documents using OpenAI's embedding model
-3. **Vector Storage**: Stores embeddings in Pinecone for efficient similarity search
-4. **Context Retrieval**: Retrieves relevant context based on query similarity
-5. **Answer Generation**: Generates comprehensive answers using OpenAI's LLM
+Document Retrieval: Fetches relevant research papers from arXiv based on user query using LlamaIndex's Document Loaders
+Embedding Generation: Creates embeddings for documents using OpenAI's embedding model through LlamaIndex's embedding interface
+Vector Storage: Stores embeddings in Pinecone using LlamaIndex's VectorStoreIndex and PineconeVectorStore
+Context Retrieval: Retrieves relevant context based on query similarity using LlamaIndex's query engine
+Answer Generation: Generates comprehensive answers using OpenAI's LLM through LlamaIndex's LLMPredictor
 
-## 📚 Dependencies & APIs
+📚 Dependencies & APIs
 
-- **arXiv API**: Primary source for research papers
-- **OpenAI API**: Used for:
-  - Text embeddings (text-embedding-ada-002)
-  - LLM generation (gpt-4-turbo)
-- **Pinecone**: Vector database for similarity search
-- **Supabase**: PostgreSQL database for chat storage
+LlamaIndex: Core framework used for:
 
-## 🤝 Contributing
+RAG pipeline orchestration
+Document loading and processing
+Vector store integration
+LLM/Embedding interface management
 
-Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
+arXiv API: Primary source for research papers
+OpenAI API: Used for:
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Text embeddings (text-embedding-ada-002)
+LLM generation (gpt-4-turbo)
+
+
+Pinecone: Vector database for similarity search
+Supabase: PostgreSQL database for chat storage
+
+
 
 
