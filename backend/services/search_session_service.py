@@ -49,3 +49,17 @@ class SearchSessionService:
             return response.data[0]
         except Exception as e:
             raise Exception(f"Error creating search session: {str(e)}")
+
+    async def update_title(self, title: str, id: str) -> Dict[str, Any]:
+
+        try:
+          
+            response = self.supabase.table(self.table_name)\
+                .update({'title': title})\
+                .eq('id', id)\
+                .execute()
+            
+            return response
+        except Exception as e:
+            raise Exception(f"Error creating search session: {str(e)}")
+    

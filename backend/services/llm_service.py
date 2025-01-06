@@ -77,7 +77,7 @@ class LLMService(BaseService):
 
             return {
                 'question': question,
-                'answer': str(response),
+                'answer': str(response).replace("assistant: ", ""),
                 'sources': sources,
                 'error': None
             }
@@ -116,13 +116,14 @@ class LLMService(BaseService):
                 ),
                 ChatMessage(
                     role="user", 
-                    content=f"Generate a 1-3 word title that captures the main topic of this text: {text}"
+                    content=f"Generate a 1-3 word title that captures the main topic of this text: {text}. Only include the title, no other text. Don't include the text assistant in the response"
                 )
             ]
             
             response = self.client.chat(messages=messages)
-            title = str(response).strip()
-            
+            title = str(response).strip().replace("assistant: ", "")
+            print(response)
+            print(title)
             # Ensure we only return up to 3 words
             words = title.split()
             if len(words) > 3:

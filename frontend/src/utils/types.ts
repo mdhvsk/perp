@@ -1,27 +1,30 @@
 export interface Session {
-    id: string;
-    title: string;
-    created_at: string;
-    updated_at: string;
-  }
-  
-  export interface Message {
-    id: string;
-    session_id: string;
-    question: string;
-    answer: string;
-    created_at: string;
-    sources: object[];  
+  id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
 
-  }
-  
-  
-  export interface CreateMessageRequest {
-    session_id: string;
-    question: string;
-    answer: string;
-    sources: Record<string, string>[];  
-  }
+export interface Message {
+  id: string;
+  session_id: string;
+  question: string;
+  answer: string;
+  created_at: string;
+  sources: object[];
+}
+
+export interface CreateMessageRequest {
+  session_id: string;
+  question: string;
+  answer: string;
+  sources: Record<string, string>[];
+}
+
+export interface TitleRequest {
+  session_id: string;
+  text: string;
+}
 export interface QueryGeneralRequest {
   query: string;
 }
@@ -37,7 +40,7 @@ export interface SearchResponse {
 export interface GeneralSearchResponse {
   question: string;
   answer: string;
-  sources: Record<string, string>[]; 
+  sources: Record<string, string>[];
   error: string | null;
 }
 

@@ -66,10 +66,9 @@ const Dashboard = () => {
     }
 
     const handleQuery = async (prompt: string, session_id: string) => {
+        await dbService.generateTitle({"text": prompt, "session_id": session_id})
         const body: QueryGeneralRequest = { query: prompt }
         const message = await queryService.askHealthQuestion(body)
-        console.log("*******Asking health question with sources**********")
-        console.log(message)
         const messageBody: CreateMessageRequest = {
             session_id: session_id,
             question: prompt,

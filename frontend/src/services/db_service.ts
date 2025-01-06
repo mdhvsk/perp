@@ -1,4 +1,4 @@
-import { Session, CreateMessageRequest, Message } from '@/utils/types';
+import { Session, CreateMessageRequest, Message, TitleRequest } from '@/utils/types';
 import axios, { AxiosError } from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -79,6 +79,20 @@ export class DBService {
       throw error;
     }
   }
+
+  public async generateTitle(data: TitleRequest): Promise<Message> {
+    console.log('Sending request with data:', JSON.stringify(data, null, 2));
+    console.log('Stringified request:', JSON.stringify(data));
+
+    try {
+      const response = await axios.post<Message>(`${API_BASE_URL}/generate-title`, data);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
 }
 
 // Export a singleton instance

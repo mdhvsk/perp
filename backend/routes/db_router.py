@@ -123,40 +123,25 @@ async def generate_title(
         # Generate title
         llm = llm_service.LLMService()
         result = llm.generate_short_title(request.text)
-        title = result["title"]
         
+        print("Result: ")
+        print(result)
         # Update session if session_id provided
         if request.session_id:
             try:
                 # Get current session
-                session = await search_session_service.get_session_by_id(request.session_id)
+                session = await search_session_service.update_title(result, request.session_id)
                 
-                if session:
-                    # Update the session with new title
-                    current_time = datetime.utcnow().isoformat()
-                    updated_data = {
-                        'title': title,
-                        'updated_at': current_time
-                    }
-                    
-                    response = search_session_service.supabase.table('search_sessions')\
-                        .update(updated_data)\
-                        .eq('id', str(request.session_id))\
-                        .execute()
-                        
-                    result["updated"] = True
-                else:
-                    logger.warning(f"Session {request.session_id} not found")
                     
             except Exception as e:
                 logger.error(f"Error updating session title: {str(e)}")
                 # Don't fail the entire request if session update fails
-                result["updated"] = False
+                result = False
         
         return TitleResponse(
-            title=result["title"],
-            session_id=result["session_id"],
-            updated=result["updated"]
+            title=result,
+            session_id=request.session_id,
+            updated=True
         )
         
     except Exception as e:
