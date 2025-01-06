@@ -6,7 +6,10 @@ import {
 } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 
-const API_BASE_URL = "http://localhost:8000/api/query";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+const API_BASE_URL = `${API_URL}/api/query`;
 
 export class QueryService {
     private static instance: QueryService;

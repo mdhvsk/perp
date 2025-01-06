@@ -1,7 +1,9 @@
 import { Session, CreateMessageRequest, Message } from '@/utils/types';
 import axios, { AxiosError } from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api/db';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+const API_BASE_URL = `${API_URL}/api/db`;
 
 export class DBService {
   private static instance: DBService;
