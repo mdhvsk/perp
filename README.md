@@ -70,8 +70,8 @@ OpenAI API used for:
 - Text embeddings (text-embedding-ada-002)
 - LLM generation (gpt-4-turbo)
 
-
 Pinecone: Vector database for similarity search
+
 Supabase: PostgreSQL database for chat storage
 
 ## ⚙️ Environment Variables
