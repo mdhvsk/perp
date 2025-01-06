@@ -76,32 +76,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({id}) => {
 
                 <ScrollArea className="flex-1 px-4">
                     <div className="space-y-1">
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start gap-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                        >
-                            <FolderIcon size={16} />
-                            <span className="flex-grow text-left">Folder</span>
-                            <span className="text-gray-500">8</span>
-                        </Button>
-
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start gap-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                        >
-                            <Star size={16} />
-                            <span className="flex-grow text-left">Favorite</span>
-                            <span className="text-gray-500">15</span>
-                        </Button>
-
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start gap-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                        >
-                            <Archive size={16} />
-                            <span className="flex-grow text-left">Archive</span>
-                            <span className="text-gray-500">36</span>
-                        </Button>
+                       
 
                         <Separator className="my-3" />
 

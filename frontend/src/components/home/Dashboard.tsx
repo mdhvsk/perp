@@ -67,7 +67,9 @@ const Dashboard = () => {
 
     const handleQuery = async (prompt: string, session_id: string) => {
         const body: QueryGeneralRequest = { query: prompt }
-        const message = await queryService.searchGeneral(body)
+        const message = await queryService.askHealthQuestion(body)
+        console.log("*******Asking health question with sources**********")
+        console.log(message)
         const messageBody: CreateMessageRequest = {
             session_id: session_id,
             question: prompt,

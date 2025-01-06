@@ -10,7 +10,9 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.llms import ChatMessage
 from fastapi import HTTPException
 
+import logging
 
+logger = logging.getLogger(__name__)
 class LLMService(BaseService):
     """Service for handling LLM operations."""
     
@@ -115,18 +117,41 @@ class LLMService(BaseService):
                 sources.append(source)
         return sources
     
-    def generateTitle(self, response) -> str:
+    def generate_short_title(self, text: str) -> str:
+        """
+        Generate a short title (up to 3 words) for a given text.
+        
+        Args:
+            text: Text content to generate title for
+            
+        Returns:
+            A string containing up to 3 words as a title
+        """
         try:
             messages = [
-                ChatMessage(role="system", content="You are a personal trainer and nutritionist"),
+                ChatMessage(
+                    role="system", 
+                    content="You are a concise title generator. Always respond with only 1-3 words."
+                ),
                 ChatMessage(
                     role="user", 
-                    content=f"Create a title of less than 4 words to describe this response {response}"
+                    content=f"Generate a 1-3 word title that captures the main topic of this text: {text}"
                 )
             ]
+            
             response = self.client.chat(messages=messages)
-            return response.data[0]
+            title = str(response).strip()
+            
+            # Ensure we only return up to 3 words
+            words = title.split()
+            if len(words) > 3:
+                title = ' '.join(words[:3])
+                
+            return title
             
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))      
-        
+            logger.error(f"Error generating title: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to generate title: {str(e)}"
+            )

@@ -1,5 +1,6 @@
+from backend.services import llm_service
 from fastapi import APIRouter, Depends, HTTPException
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from uuid import UUID
 from pydantic import BaseModel
 from datetime import datetime
@@ -32,6 +33,17 @@ class MessageResponse(BaseModel):
     answer: str
     sources: List[Dict[str, Any]]
     created_at: str
+
+class TitleRequest(BaseModel):
+    """Request model for title generation"""
+    text: str
+    session_id: Optional[str] = None
+
+class TitleResponse(BaseModel):
+    """Response model for title generation"""
+    title: str
+    session_id: Optional[str] = None
+    updated: bool = False
 
 # Create the router
 router = APIRouter(prefix="/api/db", tags=["database"])
@@ -104,3 +116,63 @@ async def create_message(
     except Exception as e:
         logging.warning("Not processable")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/generate-title", response_model=TitleResponse)
+async def generate_title(
+    request: TitleRequest,
+    search_session_service: SearchSessionService = Depends(get_search_session_service)
+):
+    """
+    Generate a short title and optionally update session title.
+    
+    Args:
+        request: TitleRequest containing the text and optional session_id
+    
+    Returns:
+        TitleResponse containing the generated title and session update status
+    """
+    try:
+        # Generate title
+        llm = llm_service.LLMService()
+        result = llm.generate_short_title(request.text)
+        title = result["title"]
+        
+        # Update session if session_id provided
+        if request.session_id:
+            try:
+                # Get current session
+                session = await search_session_service.get_session_by_id(request.session_id)
+                
+                if session:
+                    # Update the session with new title
+                    current_time = datetime.utcnow().isoformat()
+                    updated_data = {
+                        'title': title,
+                        'updated_at': current_time
+                    }
+                    
+                    response = search_session_service.supabase.table('search_sessions')\
+                        .update(updated_data)\
+                        .eq('id', str(request.session_id))\
+                        .execute()
+                        
+                    result["updated"] = True
+                else:
+                    logger.warning(f"Session {request.session_id} not found")
+                    
+            except Exception as e:
+                logger.error(f"Error updating session title: {str(e)}")
+                # Don't fail the entire request if session update fails
+                result["updated"] = False
+        
+        return TitleResponse(
+            title=result["title"],
+            session_id=result["session_id"],
+            updated=result["updated"]
+        )
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate title: {str(e)}"
+        )

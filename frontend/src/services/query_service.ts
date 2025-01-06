@@ -96,16 +96,18 @@ export class QueryService {
             throw error;
         }
     }
+ 
 
-    // Ask health question endpoint
     public async askHealthQuestion(
-        query: string,
-    ): Promise<Record<string, string>> {
+        input: QueryGeneralRequest,
+    ): Promise<GeneralSearchResponse> {
         try {
-            const response = await axios.post<Record<string, string>>(
+            const response = await axios.post<GeneralSearchResponse>(
                 `${API_BASE_URL}/ask`,
-                { query },
+                input,
             );
+            console.log("In askhealthQuestion")
+            console.log(response.data)
             return response.data;
         } catch (error) {
             this.handleError(error);
