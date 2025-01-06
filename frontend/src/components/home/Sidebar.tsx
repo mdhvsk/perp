@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CirclePlus, Search, FolderIcon, Star, Archive, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen, MessageSquare, UserIcon } from 'lucide-react';
+import { CirclePlus, Search, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen, MessageSquare, UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
