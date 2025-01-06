@@ -57,7 +57,7 @@ The RAG pipeline is implemented using LlamaIndex's powerful data framework, whic
 
 ## 📚 Dependencies & APIs
 
-LlamaIndex: Core framework used for:
+LlamaIndex Core framework used for:
 - RAG pipeline orchestration
 - Document loading and processing
 - Vector store integration
@@ -65,10 +65,9 @@ LlamaIndex: Core framework used for:
 
 
 arXiv API: Primary source for research papers
-OpenAI API: Used for:
-
-Text embeddings (text-embedding-ada-002)
-LLM generation (gpt-4-turbo)
+OpenAI API used for:
+- Text embeddings (text-embedding-ada-002)
+- LLM generation (gpt-4-turbo)
 
 
 Pinecone: Vector database for similarity search
