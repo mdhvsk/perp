@@ -1,6 +1,10 @@
-# RAG-Powered Health/Nutrition Answer Engine
+# Vitality.ai
 
-A full-stack application that provides AI-powered answers to research queries using RAG (Retrieval Augmented Generation) technology. The system retrieves relevant research papers from arXiv, generates accurate responses using OpenAI's LLM, and maintains context through vector similarity search.
+A full-stack application that provides AI-powered answers to health, nutrition, and fitness queries using RAG (Retrieval Augmented Generation) technology. The system retrieves relevant research papers from arXiv, generates accurate responses using OpenAI's LLM, and maintains context through vector similarity search.
+
+
+## Deployed App
+https://perp-henna.vercel.app/
 
 ## 🚀 Features
 
@@ -39,6 +43,36 @@ A full-stack application that provides AI-powered answers to research queries us
 
 ## Architecture Diagram 
 <img width="911" alt="Screenshot 2025-01-05 at 8 43 45 PM" src="https://github.com/user-attachments/assets/2ad44848-9b53-4d32-baf0-90bb649764da" />
+
+
+
+## 🔄 RAG Pipeline
+The RAG pipeline is implemented using LlamaIndex's powerful data framework, which handles:
+
+- Document Retrieval: Fetches relevant research papers from arXiv based on user query using LlamaIndex's Document Loaders
+- Embedding Generation: Creates embeddings for documents using OpenAI's embedding model through LlamaIndex's embedding interface
+- Vector Storage: Stores embeddings in Pinecone using LlamaIndex's VectorStoreIndex and PineconeVectorStore
+- Context Retrieval: Retrieves relevant context based on query similarity using LlamaIndex's query engine
+- Answer Generation: Generates comprehensive answers using OpenAI's LLM through LlamaIndex's LLMPredictor
+
+## 📚 Dependencies & APIs
+
+LlamaIndex Core framework used for:
+- RAG pipeline orchestration
+- Document loading and processing
+- Vector store integration
+- LLM/Embedding interface management
+
+
+arXiv API: Primary source for research papers
+
+OpenAI API used for:
+- Text embeddings (text-embedding-ada-002)
+- LLM generation (gpt-4-turbo)
+
+Pinecone: Vector database for similarity search
+
+Supabase: PostgreSQL database for chat storage
 
 ## ⚙️ Environment Variables
 
@@ -98,35 +132,6 @@ npm run dev
    - Store and search vectors in Pinecone
    - Generate a comprehensive answer using OpenAI's LLM
    - Store the conversation in Supabase
-
-## 🔄 RAG Pipeline
-The RAG pipeline is implemented using LlamaIndex's powerful data framework, which handles:
-
-Document Retrieval: Fetches relevant research papers from arXiv based on user query using LlamaIndex's Document Loaders
-Embedding Generation: Creates embeddings for documents using OpenAI's embedding model through LlamaIndex's embedding interface
-Vector Storage: Stores embeddings in Pinecone using LlamaIndex's VectorStoreIndex and PineconeVectorStore
-Context Retrieval: Retrieves relevant context based on query similarity using LlamaIndex's query engine
-Answer Generation: Generates comprehensive answers using OpenAI's LLM through LlamaIndex's LLMPredictor
-
-## 📚 Dependencies & APIs
-
-LlamaIndex: Core framework used for:
-
-RAG pipeline orchestration
-Document loading and processing
-Vector store integration
-LLM/Embedding interface management
-
-
-arXiv API: Primary source for research papers
-OpenAI API: Used for:
-
-Text embeddings (text-embedding-ada-002)
-LLM generation (gpt-4-turbo)
-
-
-Pinecone: Vector database for similarity search
-Supabase: PostgreSQL database for chat storage
 
 
 
